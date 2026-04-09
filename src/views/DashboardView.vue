@@ -65,7 +65,8 @@ const roleMenus = {
   Admin: [
     { name: 'Tổng quan', path: '/dashboard', icon: '📊' },
     { name: 'Quản lý lịch hẹn', path: '/admin/appointments', icon: '📅' },
-    { name: 'Quản lý Nhân sự', path: '/admin/dentists', icon: '👨‍⚕️' },
+    { name: 'Quản lý Bác sĩ', path: '/admin/dentists', icon: '👨‍⚕️' }, // Mình đổi tên lại cho rõ ràng
+    { name: 'Quản lý Lễ tân', path: '/admin/receptionists', icon: '👩‍💼' }, // <-- THÊM DÒNG NÀY VÀO ĐÂY
     { name: 'Quản lý Dịch vụ', path: '/admin/services', icon: '💉' },
   ],
   Dentist: [
