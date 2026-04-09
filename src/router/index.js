@@ -8,6 +8,7 @@ import DashboardHome from '../views/DashboardHome.vue'
 import CreateStaff from '../views/admin/CreateStaff.vue'
 import ServicesManagement from '../views/admin/ServicesManagement.vue'
 import DentistsManagement from '../views/admin/DentistsManagement.vue'
+import ReceptionistsManagement from '../views/admin/ReceptionistsManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,7 +49,12 @@ const router = createRouter({
           path: '/admin/services', // Màn hình quản lý dịch vụ
           name: 'services-management',
           component: ServicesManagement,
-        }
+        },
+        {
+          path: '/admin/receptionists', // Màn hình quản lý lễ tân
+          name: 'receptionists-management',
+          component: ReceptionistsManagement,
+        },
       ]
     },
   ],
