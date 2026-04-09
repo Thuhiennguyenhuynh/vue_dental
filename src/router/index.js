@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import DashboardHome from '../views/DashboardHome.vue' // Bạn có thể tách phần thống kê cũ ra file này
+import CreateStaff from '../views/admin/CreateStaff.vue' // File mình đã viết ở trên
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,10 +24,20 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
-      name: 'dashboard',
-      component: DashboardView,
-      // Đánh dấu route này bắt buộc phải đăng nhập
+      component: DashboardView, // DashboardView giờ đóng vai trò là Layout
       meta: { requiresAuth: true },
+      children: [
+        {
+          path: '', // Mặc định khi vào /dashboard
+          name: 'dashboard-home',
+          component: DashboardHome, // Render các khối thống kê (Box vuông)
+        },
+        {
+          path: '/admin/dentists', // Khớp với path trong menu Admin của bạn
+          name: 'create-staff',
+          component: CreateStaff,
+        }
+      ]
     },
   ],
 })
