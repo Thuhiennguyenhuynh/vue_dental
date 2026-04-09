@@ -2,11 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
-import ServicesManagement from '../views/admin/ServicesManagement.vue'
 
-// --- THÊM 2 COMPONENT MỚI VÀO ĐÂY ---
+// Import các màn hình con
 import DashboardHome from '../views/DashboardHome.vue'
 import CreateStaff from '../views/admin/CreateStaff.vue'
+import ServicesManagement from '../views/admin/ServicesManagement.vue'
+import DentistsManagement from '../views/admin/DentistsManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,13 +35,17 @@ const router = createRouter({
           component: DashboardHome,
         },
         {
-          // Khớp với path trong menu cấu hình Admin của bạn
-          path: '/admin/dentists',
+          path: '/admin/dentists', // Hiển thị danh sách Nha sĩ
+          name: 'dentists-management', // Đổi tên cho khỏi trùng
+          component: DentistsManagement, // Gán đúng component DentistsManagement
+        },
+        {
+          path: '/admin/create-staff', // Form tạo tài khoản nhân sự
           name: 'create-staff',
           component: CreateStaff,
         },
         {
-          path: '/admin/services', // Đảm bảo khớp với path trong menu Admin của bạn
+          path: '/admin/services', // Màn hình quản lý dịch vụ
           name: 'services-management',
           component: ServicesManagement,
         }
