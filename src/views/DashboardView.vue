@@ -1,11 +1,7 @@
 <template>
   <div class="flex h-screen bg-gray-50 font-sans">
-    <aside
-      class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col shadow-xl"
-    >
-      <div
-        class="p-6 text-2xl font-bold border-b border-blue-700 text-center flex flex-col items-center"
-      >
+    <aside class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col shadow-xl">
+      <div class="p-6 text-2xl font-bold border-b border-blue-700 text-center flex flex-col items-center">
         <span>🦷 Dental Clinic</span>
         <span class="text-xs font-medium mt-2 px-3 py-1 bg-blue-700 rounded-full text-blue-100">
           Vai trò: {{ userRole }}
@@ -37,11 +33,18 @@
 
     <main class="flex-1 p-8 overflow-y-auto">
       <div class="flex justify-between items-center mb-8">
-        <router-view></router-view>
-</div>
+        <div>
+          <h1 class="text-3xl font-extrabold text-gray-800">Hệ thống quản lý</h1>
+          <p class="text-gray-500 mt-1">
+            Chào mừng bạn quay trở lại, <span class="font-bold text-blue-600">{{ username }}</span>!
+          </p>
+        </div>
+      </div>
+
+      <router-view></router-view>
 
     </main>
-
+  </div>
 </template>
 
 <script setup>
@@ -52,18 +55,17 @@ const router = useRouter()
 const userRole = ref('')
 const username = ref('Bạn')
 
-// Danh sách Menu cấu hình trước cho từng Role
 const roleMenus = {
   Patient: [
     { name: 'Trang chủ', path: '/dashboard', icon: '🏠' },
-    { name: 'Đặt lịch khám mới', path: '/booking', icon: '📅' }, // Link chuẩn bị làm
+    { name: 'Đặt lịch khám mới', path: '/booking', icon: '📅' },
     { name: 'Lịch sử khám', path: '/history', icon: '📜' },
     { name: 'Hồ sơ của tôi', path: '/profile', icon: '👤' },
   ],
   Admin: [
     { name: 'Tổng quan', path: '/dashboard', icon: '📊' },
     { name: 'Quản lý lịch hẹn', path: '/admin/appointments', icon: '📅' },
-    { name: 'Quản lý Bác sĩ', path: '/admin/dentists', icon: '👨‍⚕️' },
+    { name: 'Quản lý Nhân sự', path: '/admin/dentists', icon: '👨‍⚕️' },
     { name: 'Quản lý Dịch vụ', path: '/admin/services', icon: '💉' },
   ],
   Dentist: [
@@ -76,19 +78,15 @@ const roleMenus = {
   ],
 }
 
-// Lấy menu tương ứng dựa vào Role, nếu không có mặc định lấy của Patient
 const menuItems = computed(() => {
   return roleMenus[userRole.value] || roleMenus['Patient']
 })
 
 onMounted(() => {
-  // Lấy quyền từ localStorage do lúc Login ta đã lưu
   const role = localStorage.getItem('role')
   if (role) {
     userRole.value = role
   }
-
-  // (Tùy chọn) Có thể bóc tách username từ token JWT nếu bạn muốn hiển thị tên thật
 })
 
 const handleLogout = () => {
