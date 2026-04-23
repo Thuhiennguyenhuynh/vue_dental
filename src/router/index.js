@@ -30,7 +30,6 @@ const router = createRouter({
       component: RegisterView,
       meta: { requiresGuest: true },
     },
-    // Chú ý: Đã xóa phần redirect của /profile ở đây
     {
       path: '/history',
       redirect: '/my-appointments'
@@ -47,11 +46,10 @@ const router = createRouter({
           component: DashboardHome,
         },
         {
-          path: '/profile', // Định nghĩa duy nhất cho /profile ở đây
+          path: '/profile',
           name: 'profile',
           component: ProfileView,
         },
-        // Đưa các route của Patient vào làm con của Dashboard
         {
           path: '/booking',
           name: 'booking',
@@ -62,7 +60,13 @@ const router = createRouter({
           name: 'my-appointments',
           component: MyAppointments,
         },
-        // Các route của Admin / Lễ tân
+        // Trang riêng cho Lễ tân
+        {
+          path: '/receptionist/appointments', // Đã thêm dấu / ở đầu cho đồng bộ
+          name: 'receptionist-appointments',
+          component: () => import('../views/receptionist/ReceptionistAppointments.vue'),
+        },
+        // Các route của Admin / Lễ tân dùng chung cái cũ (nếu có)
         {
           path: '/admin/appointments',
           name: 'appointments-management',
@@ -93,16 +97,51 @@ const router = createRouter({
   ],
 })
 
-// Navigation Guard
+// Navigation Guard kết hợp Phân Quyền (RBAC)
 router.beforeEach((to, from) => {
   const isAuthenticated = !!localStorage.getItem('token')
+  const userRole = localStorage.getItem('role') // Lấy quyền: 'Admin', 'Receptionist', 'Patient'
 
+  // 1. Chặn người chưa đăng nhập
   if (to.meta.requiresAuth && !isAuthenticated) {
     return '/'
-  } else if (to.meta.requiresGuest && isAuthenticated) {
+  }
+
+  // 2. Chặn người đã đăng nhập quay lại màn hình Login
+  if (to.meta.requiresGuest && isAuthenticated) {
     return '/dashboard'
   }
 
+  // 3. Phân quyền truy cập các đường dẫn
+  if (isAuthenticated) {
+    // Nếu là đường dẫn của Lễ tân
+    if (to.path.startsWith('/receptionist/')) {
+      if (userRole !== 'Receptionist' && userRole !== 'Admin') {
+        alert('Bạn không có quyền truy cập trang này!')
+        return '/dashboard'
+      }
+    }
+
+    // Nếu là đường dẫn của Admin
+    if (to.path.startsWith('/admin/')) {
+      // Cho phép Lễ tân dùng chung trang /admin/appointments (nếu bạn vẫn gắn link này)
+      if (to.path === '/admin/appointments') {
+        if (userRole !== 'Receptionist' && userRole !== 'Admin') {
+          alert('Bạn không có quyền truy cập trang này!')
+          return '/dashboard'
+        }
+      }
+      // Chặn các trang còn lại của Admin (chỉ Admin được vào)
+      else {
+        if (userRole !== 'Admin') {
+          alert('Chỉ Quản trị viên (Admin) mới có quyền truy cập!')
+          return '/dashboard'
+        }
+      }
+    }
+  }
+
+  // Hợp lệ -> Cho đi tiếp
   return true
 })
 
