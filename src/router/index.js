@@ -8,9 +8,11 @@ import CreateStaff from '../views/admin/CreateStaff.vue'
 import ServicesManagement from '../views/admin/ServicesManagement.vue'
 import DentistsManagement from '../views/admin/DentistsManagement.vue'
 import ReceptionistsManagement from '../views/admin/ReceptionistsManagement.vue'
+import ProfileView from '../views/patient/ProfileView.vue'
 
-// Import thêm 2 màn hình nghiệp vụ mới
+// Import các màn hình nghiệp vụ
 import BookingView from '../views/patient/BookingView.vue'
+import MyAppointments from '../views/patient/MyAppointments.vue'
 import AppointmentsManagement from '../views/admin/AppointmentsManagement.vue'
 
 const router = createRouter({
@@ -28,24 +30,39 @@ const router = createRouter({
       component: RegisterView,
       meta: { requiresGuest: true },
     },
-    // Route Đặt lịch dành cho Bệnh nhân (Patient)
+    // Chú ý: Đã xóa phần redirect của /profile ở đây
     {
-      path: '/booking',
-      name: 'booking',
-      component: BookingView,
-      meta: { requiresAuth: true },
+      path: '/history',
+      redirect: '/my-appointments'
     },
+    // Route Dashboard: Chứa Layout chung (Sidebar, Header)
     {
       path: '/dashboard',
       component: DashboardView,
       meta: { requiresAuth: true },
       children: [
         {
-          path: '',
+          path: '', // Default của /dashboard
           name: 'dashboard-home',
           component: DashboardHome,
         },
-        // Quản lý lịch hẹn (Cho Lễ tân / Admin)
+        {
+          path: '/profile', // Định nghĩa duy nhất cho /profile ở đây
+          name: 'profile',
+          component: ProfileView,
+        },
+        // Đưa các route của Patient vào làm con của Dashboard
+        {
+          path: '/booking',
+          name: 'booking',
+          component: BookingView,
+        },
+        {
+          path: '/my-appointments',
+          name: 'my-appointments',
+          component: MyAppointments,
+        },
+        // Các route của Admin / Lễ tân
         {
           path: '/admin/appointments',
           name: 'appointments-management',
@@ -76,16 +93,17 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from, next) => {
+// Navigation Guard
+router.beforeEach((to, from) => {
   const isAuthenticated = !!localStorage.getItem('token')
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/')
+    return '/'
   } else if (to.meta.requiresGuest && isAuthenticated) {
-    next('/dashboard')
-  } else {
-    next()
+    return '/dashboard'
   }
+
+  return true
 })
 
 export default router
