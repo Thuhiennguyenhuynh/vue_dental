@@ -1,7 +1,11 @@
 <template>
   <div class="flex h-screen bg-gray-50 font-sans">
-    <aside class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col shadow-xl">
-      <div class="p-6 text-2xl font-bold border-b border-blue-700 text-center flex flex-col items-center">
+    <aside
+      class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col shadow-xl"
+    >
+      <div
+        class="p-6 text-2xl font-bold border-b border-blue-700 text-center flex flex-col items-center"
+      >
         <span>🦷 Dental Clinic</span>
         <span class="text-xs font-medium mt-2 px-3 py-1 bg-blue-700 rounded-full text-blue-100">
           Vai trò: {{ userRole }}
@@ -36,13 +40,13 @@
         <div>
           <h1 class="text-3xl font-extrabold text-gray-800">Hệ thống quản lý</h1>
           <p class="text-gray-500 mt-1">
-            Chào mừng bạn quay trở lại, <span class="font-bold text-blue-600">{{ username }}</span>!
+            Chào mừng bạn quay trở lại, <span class="font-bold text-blue-600">{{ username }}</span
+            >!
           </p>
         </div>
       </div>
 
       <router-view></router-view>
-
     </main>
   </div>
 </template>

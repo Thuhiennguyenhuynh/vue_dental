@@ -3,12 +3,15 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
 
-// Import các màn hình con
 import DashboardHome from '../views/DashboardHome.vue'
 import CreateStaff from '../views/admin/CreateStaff.vue'
 import ServicesManagement from '../views/admin/ServicesManagement.vue'
 import DentistsManagement from '../views/admin/DentistsManagement.vue'
 import ReceptionistsManagement from '../views/admin/ReceptionistsManagement.vue'
+
+// Import thêm 2 màn hình nghiệp vụ mới
+import BookingView from '../views/patient/BookingView.vue'
+import AppointmentsManagement from '../views/admin/AppointmentsManagement.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,42 +28,54 @@ const router = createRouter({
       component: RegisterView,
       meta: { requiresGuest: true },
     },
+    // Route Đặt lịch dành cho Bệnh nhân (Patient)
+    {
+      path: '/booking',
+      name: 'booking',
+      component: BookingView,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/dashboard',
-      component: DashboardView, // DashboardView giờ là cái khung (Layout)
+      component: DashboardView,
       meta: { requiresAuth: true },
       children: [
         {
-          path: '', // Mặc định khi vào /dashboard sẽ load DashboardHome
+          path: '',
           name: 'dashboard-home',
           component: DashboardHome,
         },
+        // Quản lý lịch hẹn (Cho Lễ tân / Admin)
         {
-          path: '/admin/dentists', // Hiển thị danh sách Nha sĩ
-          name: 'dentists-management', // Đổi tên cho khỏi trùng
-          component: DentistsManagement, // Gán đúng component DentistsManagement
+          path: '/admin/appointments',
+          name: 'appointments-management',
+          component: AppointmentsManagement,
         },
         {
-          path: '/admin/create-staff', // Form tạo tài khoản nhân sự
+          path: '/admin/dentists',
+          name: 'dentists-management',
+          component: DentistsManagement,
+        },
+        {
+          path: '/admin/create-staff',
           name: 'create-staff',
           component: CreateStaff,
         },
         {
-          path: '/admin/services', // Màn hình quản lý dịch vụ
+          path: '/admin/services',
           name: 'services-management',
           component: ServicesManagement,
         },
         {
-          path: '/admin/receptionists', // Màn hình quản lý lễ tân
+          path: '/admin/receptionists',
           name: 'receptionists-management',
           component: ReceptionistsManagement,
-        },
+        }
       ]
     },
   ],
 })
 
-// --- NAVIGATION GUARD CHẶN NÚT BACK (GIỮ NGUYÊN) ---
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token')
 
