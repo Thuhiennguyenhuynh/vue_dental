@@ -91,7 +91,13 @@ const router = createRouter({
           path: '/admin/receptionists',
           name: 'receptionists-management',
           component: ReceptionistsManagement,
-        }
+        },
+
+        {
+      path: '/dentist/schedule',
+      name: 'dentist-schedule',
+      component: () => import('../views/dentist/DentistSchedule.vue'),
+    }
       ]
     },
   ],

@@ -23,6 +23,14 @@
           <span>{{ item.icon }}</span>
           <span>{{ item.name }}</span>
         </router-link>
+
+        <router-link
+  v-if="userRole === 'Dentist' || userRole === 'Admin'"
+  to="/dentist/schedule"
+  class="p-3 rounded-lg hover:bg-blue-50 text-gray-700 flex items-center gap-2"
+>
+  <span>👨‍⚕️ Lịch khám của tôi</span>
+</router-link>
       </nav>
 
       <div class="p-4 border-t border-blue-700">
