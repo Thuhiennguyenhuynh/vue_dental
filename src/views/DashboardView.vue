@@ -1,60 +1,76 @@
 <template>
-  <div class="flex h-screen bg-gray-50 font-sans">
+  <div class="flex h-screen bg-gray-50 dark:bg-slate-900 font-sans transition-colors duration-300">
+    <!-- Sidebar -->
     <aside
-      class="w-64 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col shadow-xl"
+      class="w-64 bg-gradient-to-b from-teal-600 to-teal-700 dark:from-teal-800 dark:to-teal-900 text-white flex flex-col shadow-xl transition-all duration-300"
     >
+      <!-- Logo Section -->
       <div
-        class="p-6 text-2xl font-bold border-b border-blue-700 text-center flex flex-col items-center"
+        class="p-6 text-2xl font-bold border-b border-teal-500/50 dark:border-teal-700 text-center flex flex-col items-center animate-slide-in"
       >
-        <span>🦷 Dental Clinic</span>
-        <span class="text-xs font-medium mt-2 px-3 py-1 bg-blue-700 rounded-full text-blue-100">
-          Vai trò: {{ userRole }}
+        <span class="text-3xl mb-2">🦷</span>
+        <span>Dental Clinic</span>
+        <span
+          class="text-xs font-medium mt-3 px-3 py-1 bg-teal-500 dark:bg-teal-700 rounded-full text-teal-50"
+        >
+          {{ userRole }}
         </span>
       </div>
 
+      <!-- Navigation Menu -->
       <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
         <router-link
           v-for="item in menuItems"
           :key="item.name"
           :to="item.path"
-          class="block px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-blue-700 hover:translate-x-1 flex items-center gap-3"
-          active-class="bg-blue-600 shadow-md"
+          class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-teal-500 hover:shadow-md hover:translate-x-1 flex items-center gap-3 text-teal-50 active:bg-teal-400 dark:hover:bg-teal-700 dark:active:bg-teal-600"
         >
-          <span>{{ item.icon }}</span>
+          <span class="text-lg">{{ item.icon }}</span>
           <span>{{ item.name }}</span>
         </router-link>
-
-        <router-link
-  v-if="userRole === 'Dentist' || userRole === 'Admin'"
-  to="/dentist/schedule"
-  class="p-3 rounded-lg hover:bg-blue-50 text-gray-700 flex items-center gap-2"
->
-  <span>👨‍⚕️ Lịch khám của tôi</span>
-</router-link>
       </nav>
 
-      <div class="p-4 border-t border-blue-700">
+      <!-- Dark Mode Toggle -->
+      <div class="p-4 border-t border-teal-500/50 dark:border-teal-700 space-y-3">
+        <button
+          @click="toggleDarkMode"
+          class="w-full px-4 py-3 bg-teal-500 dark:bg-teal-700 hover:bg-teal-400 dark:hover:bg-teal-600 text-white rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+        >
+          <span v-if="isDarkMode">☀️ Chế độ sáng</span>
+          <span v-else>🌙 Chế độ tối</span>
+        </button>
+
+        <!-- Logout Button -->
         <button
           @click="handleLogout"
-          class="w-full px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold shadow-md transition-all duration-200 hover:-translate-y-0.5"
+          class="w-full px-4 py-3 bg-red-500 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-600 text-white rounded-lg font-bold shadow-md transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
         >
-          🚪 Đăng xuất
+          <span>🚪</span> Đăng xuất
         </button>
       </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="flex-1 p-8 overflow-y-auto">
-      <div class="flex justify-between items-center mb-8">
+      <!-- Header -->
+      <div class="flex justify-between items-start mb-8 animate-fade-in">
         <div>
-          <h1 class="text-3xl font-extrabold text-gray-800">Hệ thống quản lý</h1>
-          <p class="text-gray-500 mt-1">
-            Chào mừng bạn quay trở lại, <span class="font-bold text-blue-600">{{ username }}</span
-            >!
+          <h1 class="text-3xl font-extrabold text-gray-800 dark:text-gray-100">Hệ thống quản lý</h1>
+          <p class="text-gray-600 dark:text-gray-400 mt-2">
+            Chào mừng bạn quay trở lại,
+            <span
+              class="font-bold bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent"
+            >
+              {{ username }}
+            </span>
           </p>
         </div>
       </div>
 
-      <router-view></router-view>
+      <!-- Content Area -->
+      <div class="animate-slide-up">
+        <router-view></router-view>
+      </div>
     </main>
   </div>
 </template>
@@ -66,6 +82,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const userRole = ref('')
 const username = ref('Bạn')
+const isDarkMode = ref(false)
 
 const roleMenus = {
   Patient: [
@@ -77,8 +94,8 @@ const roleMenus = {
   Admin: [
     { name: 'Tổng quan', path: '/dashboard', icon: '📊' },
     { name: 'Quản lý lịch hẹn', path: '/admin/appointments', icon: '📅' },
-    { name: 'Quản lý Bác sĩ', path: '/admin/dentists', icon: '👨‍⚕️' }, // Mình đổi tên lại cho rõ ràng
-    { name: 'Quản lý Lễ tân', path: '/admin/receptionists', icon: '👩‍💼' }, // <-- THÊM DÒNG NÀY VÀO ĐÂY
+    { name: 'Quản lý Bác sĩ', path: '/admin/dentists', icon: '👨‍⚕️' },
+    { name: 'Quản lý Lễ tân', path: '/admin/receptionists', icon: '👩‍💼' },
     { name: 'Quản lý Dịch vụ', path: '/admin/services', icon: '💉' },
   ],
   Dentist: [
@@ -100,7 +117,28 @@ onMounted(() => {
   if (role) {
     userRole.value = role
   }
+
+  // Check dark mode preference
+  const savedTheme = localStorage.getItem('theme')
+  if (
+    savedTheme === 'dark' ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches && !savedTheme)
+  ) {
+    isDarkMode.value = true
+    document.documentElement.classList.add('dark')
+  }
 })
+
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value
+  if (isDarkMode.value) {
+    document.documentElement.classList.add('dark')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+    localStorage.setItem('theme', 'light')
+  }
+}
 
 const handleLogout = () => {
   if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {

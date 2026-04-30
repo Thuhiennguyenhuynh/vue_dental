@@ -1,13 +1,19 @@
 <template>
-  <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-    <div class="flex justify-between items-center mb-6 border-b pb-4">
-      <h2 class="text-2xl font-bold text-gray-800">Quản lý Bác sĩ (Nha sĩ)</h2>
+  <div
+    class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-md dark:shadow-lg border border-teal-200 dark:border-teal-900 hover:shadow-lg transition-shadow duration-300 animate-fade-in"
+  >
+    <div
+      class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4"
+    >
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        👨‍⚕️ Quản lý Bác sĩ (Nha sĩ)
+      </h2>
 
       <button
         @click="$router.push('/admin/create-staff')"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2"
+        class="bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-700 dark:to-cyan-700 hover:from-teal-700 hover:to-cyan-700 dark:hover:from-teal-600 dark:hover:to-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2"
       >
-        <span>+</span> Cấp tài khoản mới
+        <span>➕</span> Cấp tài khoản mới
       </button>
     </div>
 
@@ -27,7 +33,9 @@
             <td colspan="5" class="p-4 text-center text-gray-500">Đang tải dữ liệu...</td>
           </tr>
           <tr v-else-if="dentists.length === 0">
-            <td colspan="5" class="p-4 text-center text-gray-500">Chưa có nha sĩ nào trong hệ thống.</td>
+            <td colspan="5" class="p-4 text-center text-gray-500">
+              Chưa có nha sĩ nào trong hệ thống.
+            </td>
           </tr>
           <tr
             v-for="dentist in dentists"
@@ -38,23 +46,42 @@
             <td class="p-4 font-medium text-gray-800">{{ dentist.name }}</td>
             <td class="p-4 text-gray-600">{{ dentist.specialty }}</td>
             <td class="p-4 text-center">
-              <span v-if="dentist.status === 1" class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+              <span
+                v-if="dentist.status === 1"
+                class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium"
+              >
                 Đang làm việc
               </span>
-              <span v-else class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+              <span
+                v-else
+                class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium"
+              >
                 Tạm ngưng
               </span>
             </td>
             <td class="p-4 text-right space-x-2">
-              <button @click="openEditModal(dentist)" class="text-yellow-500 hover:text-yellow-600 px-2 py-1 bg-yellow-50 rounded">Sửa</button>
-              <button @click="deleteDentist(dentist.id)" class="text-red-500 hover:text-red-600 px-2 py-1 bg-red-50 rounded">Xóa</button>
+              <button
+                @click="openEditModal(dentist)"
+                class="text-yellow-500 hover:text-yellow-600 px-2 py-1 bg-yellow-50 rounded"
+              >
+                Sửa
+              </button>
+              <button
+                @click="deleteDentist(dentist.id)"
+                class="text-red-500 hover:text-red-600 px-2 py-1 bg-red-50 rounded"
+              >
+                Xóa
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+    >
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 overflow-hidden">
         <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
           Cập nhật thông tin Nha sĩ
@@ -63,17 +90,30 @@
         <form @submit.prevent="updateDentist" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
-            <input v-model="form.name" type="text" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+            <input
+              v-model="form.name"
+              type="text"
+              required
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Chuyên khoa</label>
-            <input v-model="form.specialty" type="text" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+            <input
+              v-model="form.specialty"
+              type="text"
+              required
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            />
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
-            <select v-model.number="form.status" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+            <select
+              v-model.number="form.status"
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+            >
               <option :value="1">Đang làm việc</option>
               <option :value="0">Tạm ngưng</option>
             </select>
@@ -82,8 +122,18 @@
           <div v-if="errorMessage" class="text-red-500 text-sm mt-2">{{ errorMessage }}</div>
 
           <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
-            <button type="button" @click="closeModal" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Hủy</button>
-            <button type="submit" :disabled="isSaving" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50">
+            <button
+              type="button"
+              @click="closeModal"
+              class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              :disabled="isSaving"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+            >
               {{ isSaving ? 'Đang lưu...' : 'Lưu thay đổi' }}
             </button>
           </div>
@@ -107,7 +157,7 @@ const currentId = ref(null)
 const form = ref({
   name: '',
   specialty: '',
-  status: 1
+  status: 1,
 })
 
 // Lấy danh sách nha sĩ
@@ -129,7 +179,7 @@ const openEditModal = (dentist) => {
   form.value = {
     name: dentist.name,
     specialty: dentist.specialty,
-    status: dentist.status
+    status: dentist.status,
   }
   errorMessage.value = ''
   showModal.value = true
@@ -156,7 +206,9 @@ const updateDentist = async () => {
 
 // Xóa nha sĩ
 const deleteDentist = async (id) => {
-  if (confirm('Bạn có chắc chắn muốn xóa nha sĩ này? Lưu ý: Không thể xóa nếu họ đã có lịch khám.')) {
+  if (
+    confirm('Bạn có chắc chắn muốn xóa nha sĩ này? Lưu ý: Không thể xóa nếu họ đã có lịch khám.')
+  ) {
     try {
       await api.delete(`/Dentists/${id}`)
       fetchDentists()
