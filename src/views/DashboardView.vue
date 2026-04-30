@@ -2,18 +2,18 @@
   <div class="flex h-screen bg-gray-50 dark:bg-slate-900 font-sans transition-colors duration-300">
     <!-- Sidebar -->
     <aside
-      class="w-64 bg-gradient-to-b from-teal-600 to-teal-700 dark:from-teal-800 dark:to-teal-900 text-white flex flex-col shadow-xl transition-all duration-300"
+      class="w-64 bg-gradient-to-b from-teal-600 to-teal-700 dark:from-teal-800 dark:to-teal-900 text-white flex flex-col shadow-xl transition-all duration-300 z-10"
     >
       <!-- Logo Section -->
       <div
-        class="p-6 text-2xl font-bold border-b border-teal-500/50 dark:border-teal-700 text-center flex flex-col items-center animate-slide-in"
+        class="p-6 text-2xl font-bold border-b border-teal-500/50 dark:border-teal-700/50 text-center flex flex-col items-center animate-slide-in"
       >
         <span class="text-3xl mb-2">🦷</span>
         <span>Dental Clinic</span>
         <span
           class="text-xs font-medium mt-3 px-3 py-1 bg-teal-500 dark:bg-teal-700 rounded-full text-teal-50"
         >
-          {{ userRole }}
+          {{ userRole || 'Người dùng' }}
         </span>
       </div>
 
@@ -30,8 +30,9 @@
         </router-link>
       </nav>
 
-      <!-- Dark Mode Toggle -->
-      <div class="p-4 border-t border-teal-500/50 dark:border-teal-700 space-y-3">
+      <!-- Bottom Actions: Dark Mode & Logout -->
+      <div class="p-4 border-t border-teal-500/50 dark:border-teal-700/50 space-y-3">
+        <!-- Dark Mode Toggle -->
         <button
           @click="toggleDarkMode"
           class="w-full px-4 py-3 bg-teal-500 dark:bg-teal-700 hover:bg-teal-400 dark:hover:bg-teal-600 text-white rounded-lg font-semibold shadow-md transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
@@ -43,15 +44,15 @@
         <!-- Logout Button -->
         <button
           @click="handleLogout"
-          class="w-full px-4 py-3 bg-red-500 dark:bg-red-700 hover:bg-red-600 dark:hover:bg-red-600 text-white rounded-lg font-bold shadow-md transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+          class="w-full px-4 py-3 bg-red-500/90 dark:bg-red-600/90 hover:bg-red-600 dark:hover:bg-red-500 text-white rounded-lg font-bold shadow-md transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
         >
-          <span>🚪</span> Đăng xuất
+          <span class="text-lg leading-none">🚪</span> Đăng xuất
         </button>
       </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-8 overflow-y-auto">
+    <main class="flex-1 p-8 overflow-y-auto transition-colors duration-300">
       <!-- Header -->
       <div class="flex justify-between items-start mb-8 animate-fade-in">
         <div>
@@ -67,7 +68,7 @@
         </div>
       </div>
 
-      <!-- Content Area -->
+      <!-- Content Area (Nơi render các Component con) -->
       <div class="animate-slide-up">
         <router-view></router-view>
       </div>
@@ -80,10 +81,11 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const userRole = ref('')  
+const userRole = ref('')
 const username = ref('Bạn')
 const isDarkMode = ref(false)
 
+// Cấu hình Menu linh hoạt theo vai trò[cite: 3]
 const roleMenus = {
   Patient: [
     { name: 'Trang chủ', path: '/dashboard', icon: '🏠' },
@@ -108,27 +110,32 @@ const roleMenus = {
   ],
 }
 
+// Tự động nội suy menu dựa trên Role
 const menuItems = computed(() => {
   return roleMenus[userRole.value] || roleMenus['Patient']
 })
 
 onMounted(() => {
+  // 1. Lấy thông tin User Role từ LocalStorage
   const role = localStorage.getItem('role')
   if (role) {
     userRole.value = role
   }
 
-  // Check dark mode preference
+  // 2. Khởi tạo trạng thái Dark Mode
   const savedTheme = localStorage.getItem('theme')
-  if (
-    savedTheme === 'dark' ||
-    (window.matchMedia('(prefers-color-scheme: dark)').matches && !savedTheme)
-  ) {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
     isDarkMode.value = true
     document.documentElement.classList.add('dark')
+  } else {
+    isDarkMode.value = false
+    document.documentElement.classList.remove('dark')
   }
 })
 
+// Xử lý chuyển đổi giao diện
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value
   if (isDarkMode.value) {
@@ -140,10 +147,13 @@ const toggleDarkMode = () => {
   }
 }
 
+// Xử lý Đăng xuất
 const handleLogout = () => {
   if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
+
+    // Đảm bảo đưa người dùng về đúng trang đăng nhập
     router.push('/')
   }
 }

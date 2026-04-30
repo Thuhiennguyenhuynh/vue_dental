@@ -1,1 +1,15 @@
+/* @import "tailwindcss"; */
+
+
 @import "tailwindcss";
+
+/* Khai báo ép Tailwind v4 nhận diện Dark Mode qua class */
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  body {
+    /* Mặc định cho body: nền xám rất sáng ở Light Mode và xanh xám đậm ở Dark Mode */
+    @apply bg-slate-50 text-gray-900 transition-colors duration-300 ease-in-out;
+    @apply dark:bg-slate-950 dark:text-gray-100;
+  }
+}

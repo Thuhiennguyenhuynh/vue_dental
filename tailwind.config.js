@@ -1,6 +1,6 @@
-// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class', // Bắt buộc phải có dòng này
+  darkMode: 'class', // Kích hoạt Dark Mode thông qua class
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",

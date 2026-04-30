@@ -51,6 +51,8 @@ const router = createRouter({
           name: 'profile',
           component: ProfileView,
         },
+
+        // --- CHUYÊN MỤC BỆNH NHÂN (PATIENT) ---
         {
           path: '/booking',
           name: 'booking',
@@ -61,13 +63,27 @@ const router = createRouter({
           name: 'my-appointments',
           component: MyAppointments,
         },
-        // Trang riêng cho Lễ tân
+
+        // --- CHUYÊN MỤC LỄ TÂN (RECEPTIONIST) ---
         {
-          path: '/receptionist/appointments', // Đã thêm dấu / ở đầu cho đồng bộ
+          path: '/receptionist/appointments',
           name: 'receptionist-appointments',
-          component: () => import('../views/receptionist/ReceptionistAppointments.vue'),
+          component: ReceptionistAppointments,
         },
-        // Các route của Admin / Lễ tân dùng chung cái cũ (nếu có)
+
+        // --- CHUYÊN MỤC BÁC SĨ (DENTIST) ---
+        {
+          path: '/dentist/schedule',
+          name: 'dentist-schedule',
+          component: () => import('../views/dentist/DentistSchedule.vue'),
+        },
+        {
+          path: '/dentist/patients', // Đã sửa lỗi Vue Router warn missing path
+          name: 'dentist-patients',
+          component: () => import('../views/dentist/DentistSchedule.vue'), // Tạm trỏ về Schedule hoặc tạo Component mới
+        },
+
+        // --- CHUYÊN MỤC QUẢN TRỊ (ADMIN) ---
         {
           path: '/admin/appointments',
           name: 'appointments-management',
@@ -92,69 +108,65 @@ const router = createRouter({
           path: '/admin/receptionists',
           name: 'receptionists-management',
           component: ReceptionistsManagement,
-        },
-
-        {
-          path: '/admin/appointments',
-          name: 'appointments-management',
-          component: AppointmentsManagement,
-        },
-
-        {
-      path: '/dentist/schedule',
-      name: 'dentist-schedule',
-      component: () => import('../views/dentist/DentistSchedule.vue'),
-    }
+        }
       ]
     },
   ],
 })
 
-// Navigation Guard kết hợp Phân Quyền (RBAC)
+// Navigation Guard kết hợp Phân Quyền (RBAC) chuẩn SRS[cite: 3]
 router.beforeEach((to, from) => {
   const isAuthenticated = !!localStorage.getItem('token')
-  const userRole = localStorage.getItem('role') // Lấy quyền: 'Admin', 'Receptionist', 'Patient'
+  const userRole = localStorage.getItem('role') // Lấy quyền: 'Admin', 'Receptionist', 'Dentist', 'Patient'
 
   // 1. Chặn người chưa đăng nhập
   if (to.meta.requiresAuth && !isAuthenticated) {
     return '/'
   }
 
-  // 2. Chặn người đã đăng nhập quay lại màn hình Login
+  // 2. Chặn người đã đăng nhập quay lại màn hình Login/Register
   if (to.meta.requiresGuest && isAuthenticated) {
     return '/dashboard'
   }
 
-  // 3. Phân quyền truy cập các đường dẫn
-  if (isAuthenticated) {
-    // Nếu là đường dẫn của Lễ tân
-    if (to.path.startsWith('/receptionist/')) {
-      if (userRole !== 'Receptionist' && userRole !== 'Admin') {
-        alert('Bạn không có quyền truy cập trang này!')
+  // 3. Phân quyền truy cập các đường dẫn dựa trên 4 Role
+  if (isAuthenticated && to.meta.requiresAuth) {
+
+    // Ràng buộc cho Quản trị viên (Admin)
+    if (to.path.startsWith('/admin')) {
+      if (userRole !== 'Admin') {
+        alert('Từ chối truy cập: Chỉ Quản trị viên (Admin) mới có quyền truy cập tính năng này!')
         return '/dashboard'
       }
     }
 
-    // Nếu là đường dẫn của Admin
-    if (to.path.startsWith('/admin/')) {
-      // Cho phép Lễ tân dùng chung trang /admin/appointments (nếu bạn vẫn gắn link này)
-      if (to.path === '/admin/appointments') {
-        if (userRole !== 'Receptionist' && userRole !== 'Admin') {
-          alert('Bạn không có quyền truy cập trang này!')
-          return '/dashboard'
-        }
+    // Ràng buộc cho Lễ tân (Receptionist)
+    if (to.path.startsWith('/receptionist')) {
+      if (userRole !== 'Receptionist' && userRole !== 'Admin') {
+        alert('Từ chối truy cập: Khu vực này chỉ dành cho Lễ tân!')
+        return '/dashboard'
       }
-      // Chặn các trang còn lại của Admin (chỉ Admin được vào)
-      else {
-        if (userRole !== 'Admin') {
-          alert('Chỉ Quản trị viên (Admin) mới có quyền truy cập!')
-          return '/dashboard'
-        }
+    }
+
+    // Ràng buộc cho Bác sĩ (Dentist)
+    if (to.path.startsWith('/dentist')) {
+      if (userRole !== 'Dentist') {
+        alert('Từ chối truy cập: Khu vực làm việc dành riêng cho Bác sĩ!')
+        return '/dashboard'
+      }
+    }
+
+    // Ràng buộc cho Bệnh nhân (Patient)
+    const patientOnlyRoutes = ['/booking', '/my-appointments', '/history']
+    if (patientOnlyRoutes.includes(to.path)) {
+      if (userRole !== 'Patient') {
+        alert('Từ chối truy cập: Tính năng đặt lịch chỉ dành cho Bệnh nhân!')
+        return '/dashboard'
       }
     }
   }
 
-  // Hợp lệ -> Cho đi tiếp
+  // Hợp lệ -> Cho phép chuyển trang
   return true
 })
 
