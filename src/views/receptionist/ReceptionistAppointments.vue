@@ -271,9 +271,7 @@
           <button
             v-if="selectedAppointment?.statusText === 'Confirmed'"
             @click="
-              checkInAppointment(selectedAppointment.id)
-              closeModal()
-            "
+              checkInAppointment(selectedAppointment.id),closeModal()"
             class="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded-lg font-medium transition shadow-sm"
           >
             Check-in ngay
@@ -315,6 +313,7 @@ const viewAppointmentDetail = async (id) => {
     // Lưu ý: Đảm bảo bạn đã thêm API GET /api/appointments/{id} vào Backend C# như hướng dẫn trước đó nhé!
     const response = await axios.get(`/appointments/${id}`)
     selectedAppointment.value = response.data
+  // eslint-disable-next-line no-unused-vars
   } catch (error) {
     alert('Không thể tải chi tiết lịch hẹn. Vui lòng thử lại!')
     isModalOpen.value = false

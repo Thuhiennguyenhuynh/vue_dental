@@ -1,19 +1,19 @@
 <template>
-  <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-    <div class="flex justify-between items-center mb-6 border-b pb-4">
-      <h2 class="text-2xl font-bold text-gray-800">Quản lý Dịch vụ</h2>
+  <div class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-md dark:shadow-lg border border-teal-200 dark:border-teal-900 hover:shadow-lg transition-shadow duration-300 animate-fade-in">
+    <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">💉 Quản lý Dịch vụ</h2>
       <button
         @click="openModal()"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2"
+        class="bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-700 dark:to-cyan-700 hover:from-teal-700 hover:to-cyan-700 dark:hover:from-teal-600 dark:hover:to-cyan-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 flex items-center gap-2"
       >
-        <span>+</span> Thêm dịch vụ
+        <span>➕</span> Thêm dịch vụ
       </button>
     </div>
 
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
+          <tr class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 text-gray-700 dark:text-gray-300 border-b-2 border-teal-200 dark:border-teal-800">
             <th class="p-4 font-semibold">ID</th>
             <th class="p-4 font-semibold">Tên dịch vụ</th>
             <th class="p-4 font-semibold">Thời lượng</th>
@@ -21,33 +21,40 @@
             <th class="p-4 font-semibold text-right">Thao tác</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
           <tr v-if="isLoading && services.length === 0">
-            <td colspan="5" class="p-4 text-center text-gray-500">Đang tải dữ liệu...</td>
+            <td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400 py-8">⏳ Đang tải dữ liệu...</td>
           </tr>
           <tr v-else-if="services.length === 0">
-            <td colspan="5" class="p-4 text-center text-gray-500">
-              Chưa có dịch vụ nào trong hệ thống.
-            </td>
+            <td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400 py-12">📭 Chưa có dịch vụ nào trong hệ thống.</td>
           </tr>
           <tr
             v-for="service in services"
             :key="service.id"
-            class="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+            class="border-b border-gray-200 dark:border-gray-700 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors duration-200"
           >
-            <td class="p-4 text-gray-500">#{{ service.id }}</td>
-            <td class="p-4 font-medium text-gray-800">{{ service.name }}</td>
-            <td class="p-4 text-gray-600">{{ service.duration }} phút</td>
-            <td class="p-4 text-blue-600 font-semibold">{{ formatCurrency(service.price) }}</td>
+            <td class="p-4 text-gray-600 dark:text-gray-400">#{{ service.id }}</td>
+            <td class="p-4 font-medium text-gray-800 dark:text-gray-100">{{ service.name }}</td>
+            <td class="p-4 text-gray-700 dark:text-gray-300">{{ service.duration }} phút</td>
+            <td class="p-4 text-teal-600 dark:text-teal-400 font-semibold">{{ formatCurrency(service.price) }}</td>
             <td class="p-4 text-right space-x-2">
               <button
                 @click="openModal(service)"
-                class="text-yellow-500 hover:text-yellow-600 px-2 py-1 bg-yellow-50 rounded"
+                class="text-yellow-500 hover:text-yellow-600 dark:text-yellow-400 dark:hover:text-yellow-300 px-2 py-1 bg-yellow-50 dark:bg-yellow-900/30 rounded transition-colors"
               >
                 Sửa
               </button>
               <button
                 @click="deleteService(service.id)"
+                class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 px-2 py-1 bg-red-50 dark:bg-red-900/30 rounded transition-colors"
+              >
+                Xóa
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
                 class="text-red-500 hover:text-red-600 px-2 py-1 bg-red-50 rounded"
               >
                 Xóa
