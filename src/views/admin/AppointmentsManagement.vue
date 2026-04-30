@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-md dark:shadow-lg border border-teal-200 dark:border-teal-900 hover:shadow-lg dark:hover:shadow-teal-900/30 transition-shadow duration-300 animate-fade-in"
-  >
+  <div class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-md dark:shadow-lg border border-teal-200 dark:border-teal-900 hover:shadow-lg dark:hover:shadow-teal-900/30 transition-shadow duration-300 animate-fade-in">
     <!-- Header -->
-    <div
-      class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4"
-    >
+    <div class="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-700 pb-4">
       <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Quản lý Lịch hẹn (Admin)</h2>
 
       <div class="flex items-center gap-3">
@@ -23,9 +19,7 @@
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr
-            class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 text-gray-700 dark:text-gray-300 border-b-2 border-teal-200 dark:border-teal-800 text-sm"
-          >
+          <tr class="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 text-gray-700 dark:text-gray-300 border-b-2 border-teal-200 dark:border-teal-800 text-sm">
             <th class="p-4 font-semibold">Mã</th>
             <th class="p-4 font-semibold">Giờ khám</th>
             <th class="p-4 font-semibold">Bệnh nhân</th>
@@ -38,30 +32,11 @@
         <tbody>
           <!-- Loading State -->
           <tr v-if="isLoading" class="border-b">
-            <td
-              colspan="7"
-              class="p-4 text-center text-teal-600 dark:text-teal-400 font-medium py-8"
-            >
+            <td colspan="7" class="p-4 text-center text-teal-600 dark:text-teal-400 font-medium py-8">
               <div class="flex items-center justify-center gap-2">
-                <svg
-                  class="animate-spin h-5 w-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 Đang tải dữ liệu...
               </div>
@@ -84,12 +59,7 @@
           >
             <td class="p-4 text-gray-600 dark:text-gray-400 font-medium">#{{ app.id }}</td>
             <td class="p-4 font-bold text-teal-600 dark:text-teal-400">
-              {{
-                new Date(app.startTime).toLocaleTimeString('vi-VN', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })
-              }}
+              {{ new Date(app.startTime).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}) }}
             </td>
             <td class="p-4 font-medium text-gray-800 dark:text-gray-200">{{ app.patientName }}</td>
             <td class="p-4 text-gray-700 dark:text-gray-300">BS. {{ app.dentistName }}</td>
@@ -97,10 +67,7 @@
 
             <!-- Status Badge -->
             <td class="p-4 text-center">
-              <span
-                :class="getStatusClass(app.statusText)"
-                class="inline-block px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
-              >
+              <span :class="getStatusClass(app.statusText)" class="inline-block px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200">
                 {{ translateStatus(app.statusText) }}
               </span>
             </td>
@@ -152,35 +119,28 @@ const filterDate = ref(new Date().toISOString().split('T')[0])
 // Hàm dịch tiếng Anh sang tiếng Việt cho dễ nhìn
 const translateStatus = (statusText) => {
   const map = {
-    Pending: 'Chờ duyệt',
-    Confirmed: 'Đã duyệt',
-    CheckedIn: 'Đã Check-in',
-    InTreatment: 'Đang điều trị',
-    Completed: 'Hoàn thành',
-    Cancelled: 'Đã hủy',
-    NoShow: 'Không đến',
+    'Pending': 'Chờ duyệt',
+    'Confirmed': 'Đã duyệt',
+    'CheckedIn': 'Đã Check-in',
+    'InTreatment': 'Đang điều trị',
+    'Completed': 'Hoàn thành',
+    'Cancelled': 'Đã hủy',
+    'NoShow': 'Không đến'
   }
   return map[statusText] || statusText
 }
 
 const getStatusClass = (statusText) => {
   const classMap = {
-    Pending:
-      'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-700',
-    Confirmed:
-      'bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200 border border-teal-300 dark:border-teal-700',
-    CheckedIn:
-      'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-200 border border-cyan-300 dark:border-cyan-700',
-    InTreatment:
-      'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-700',
-    Completed:
-      'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-300 dark:border-green-700',
-    Cancelled:
-      'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border border-red-300 dark:border-red-700',
-    NoShow:
-      'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border border-gray-300 dark:border-gray-600',
+    'Pending': 'bg-yellow-100 text-yellow-700 border border-yellow-200',
+    'Confirmed': 'bg-blue-100 text-blue-700 border border-blue-200',
+    'CheckedIn': 'bg-green-100 text-green-700 border border-green-200',
+    'InTreatment': 'bg-purple-100 text-purple-700 border border-purple-200',
+    'Completed': 'bg-gray-200 text-gray-800 border border-gray-300',
+    'Cancelled': 'bg-red-100 text-red-700 border border-red-200',
+    'NoShow': 'bg-gray-200 text-gray-500 border border-gray-300'
   }
-  return classMap[statusText] || 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+  return classMap[statusText] || 'bg-gray-100 text-gray-600'
 }
 
 // Lấy toàn bộ danh sách lịch hẹn
@@ -203,7 +163,7 @@ const filterAppointments = () => {
     filteredAppointments.value = allAppointments.value
     return
   }
-  filteredAppointments.value = allAppointments.value.filter((app) => {
+  filteredAppointments.value = allAppointments.value.filter(app => {
     // Tách lấy chuỗi YYYY-MM-DD từ startTime
     const appDate = app.startTime.split('T')[0]
     return appDate === filterDate.value
@@ -220,10 +180,7 @@ const updateStatus = async (id, newStatus, confirmMsg) => {
     alert('Thao tác thành công!')
     fetchAppointments() // Reload lại danh sách
   } catch (error) {
-    alert(
-      'Lỗi: ' +
-        (error.response?.data?.message || error.response?.data?.Error || 'Thao tác thất bại.'),
-    )
+    alert('Lỗi: ' + (error.response?.data?.message || error.response?.data?.Error || 'Thao tác thất bại.'))
   }
 }
 
@@ -237,10 +194,7 @@ const cancelAppointment = async (id) => {
     alert('Hủy lịch thành công!')
     fetchAppointments() // Reload lại danh sách
   } catch (error) {
-    alert(
-      'Lỗi: ' +
-        (error.response?.data?.message || error.response?.data?.Error || 'Không thể hủy lịch.'),
-    )
+    alert('Lỗi: ' + (error.response?.data?.message || error.response?.data?.Error || 'Không thể hủy lịch.'))
   }
 }
 

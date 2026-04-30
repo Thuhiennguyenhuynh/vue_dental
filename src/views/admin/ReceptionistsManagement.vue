@@ -52,10 +52,7 @@
         </tbody>
       </table>
     </div>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+       
   </div>
 </template>
 

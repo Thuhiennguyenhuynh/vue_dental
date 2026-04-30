@@ -49,7 +49,7 @@
           <option value="Receptionist">👩‍💼 Lễ tân</option>
         </select>
       </div>
-      </div>
+      
 
       <div v-if="form.role === 'Dentist'">
         <label class="block text-sm font-medium text-gray-700 mb-1">Chuyên khoa</label>
