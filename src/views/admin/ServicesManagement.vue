@@ -26,7 +26,9 @@
             <td colspan="5" class="p-4 text-center text-gray-500">Đang tải dữ liệu...</td>
           </tr>
           <tr v-else-if="services.length === 0">
-            <td colspan="5" class="p-4 text-center text-gray-500">Chưa có dịch vụ nào trong hệ thống.</td>
+            <td colspan="5" class="p-4 text-center text-gray-500">
+              Chưa có dịch vụ nào trong hệ thống.
+            </td>
           </tr>
           <tr
             v-for="service in services"
@@ -38,15 +40,28 @@
             <td class="p-4 text-gray-600">{{ service.duration }} phút</td>
             <td class="p-4 text-blue-600 font-semibold">{{ formatCurrency(service.price) }}</td>
             <td class="p-4 text-right space-x-2">
-              <button @click="openModal(service)" class="text-yellow-500 hover:text-yellow-600 px-2 py-1 bg-yellow-50 rounded">Sửa</button>
-              <button @click="deleteService(service.id)" class="text-red-500 hover:text-red-600 px-2 py-1 bg-red-50 rounded">Xóa</button>
+              <button
+                @click="openModal(service)"
+                class="text-yellow-500 hover:text-yellow-600 px-2 py-1 bg-yellow-50 rounded"
+              >
+                Sửa
+              </button>
+              <button
+                @click="deleteService(service.id)"
+                class="text-red-500 hover:text-red-600 px-2 py-1 bg-red-50 rounded"
+              >
+                Xóa
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+    >
       <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 overflow-hidden">
         <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
           {{ isEditing ? 'Cập nhật Dịch vụ' : 'Thêm Dịch vụ mới' }}
@@ -55,27 +70,77 @@
         <form @submit.prevent="saveService" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Tên dịch vụ</label>
-            <input v-model="form.name" type="text" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: Nhổ răng khôn" />
+            <input
+              v-model="form.name"
+              type="text"
+              required
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="VD: Nhổ răng khôn"
+            />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Thời lượng (phút)</label>
-              <input v-model.number="form.duration" type="number" min="1" max="300" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: 30" />
+              <input
+                v-model.number="form.duration"
+                type="number"
+                min="1"
+                max="300"
+                required
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                placeholder="VD: 30"
+              />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Đơn giá (VNĐ)</label>
-              <input v-model.number="form.price" type="number" min="0" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: 500000" />
+              <input
+                v-model.number="form.price"
+                type="number"
+                min="0"
+                required
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                placeholder="VD: 500000"
+              />
             </div>
           </div>
 
           <div v-if="errorMessage" class="text-red-500 text-sm mt-2">{{ errorMessage }}</div>
 
           <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
-            <button type="button" @click="closeModal" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Hủy</button>
-            <button type="submit" :disabled="isSaving" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50">
+            <button
+              type="button"
+              @click="closeModal"
+              class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              :disabled="isSaving"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+            >
               {{ isSaving ? 'Đang lưu...' : 'Lưu dữ liệu' }}
             </button>
+          </div>
+
+          <!-- Thêm vào bên trong <form> của ServicesManagement.vue -->
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">
+              Thời lượng thực hiện (Phút) <span class="text-red-500">*</span>
+            </label>
+            <input
+              v-model="formData.duration"
+              type="number"
+              required
+              min="15"
+              step="15"
+              placeholder="VD: 30, 45, 60..."
+              class="block w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+            <p class="text-xs text-gray-500 mt-1 italic">
+              Thông số này cực kỳ quan trọng để hệ thống tính toán giờ trống (Time Slot).
+            </p>
           </div>
         </form>
       </div>
@@ -99,7 +164,7 @@ const currentId = ref(null)
 const form = ref({
   name: '',
   duration: 30,
-  price: 0
+  price: 0,
 })
 
 // Tiện ích format tiền tệ Việt Nam
@@ -130,7 +195,7 @@ const openModal = (service = null) => {
     form.value = {
       name: service.name,
       duration: service.duration,
-      price: service.price
+      price: service.price,
     }
   } else {
     isEditing.value = false
@@ -157,7 +222,8 @@ const saveService = async () => {
     closeModal()
     fetchServices() // Tải lại danh sách sau khi lưu thành công
   } catch (error) {
-    errorMessage.value = error.response?.data?.message || error.response?.data?.title || 'Có lỗi xảy ra khi lưu.'
+    errorMessage.value =
+      error.response?.data?.message || error.response?.data?.title || 'Có lỗi xảy ra khi lưu.'
   } finally {
     isSaving.value = false
   }

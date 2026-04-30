@@ -9,6 +9,7 @@ import ServicesManagement from '../views/admin/ServicesManagement.vue'
 import DentistsManagement from '../views/admin/DentistsManagement.vue'
 import ReceptionistsManagement from '../views/admin/ReceptionistsManagement.vue'
 import ProfileView from '../views/patient/ProfileView.vue'
+import ReceptionistAppointments from '../views/receptionist/ReceptionistAppointments.vue'
 
 // Import các màn hình nghiệp vụ
 import BookingView from '../views/patient/BookingView.vue'
@@ -91,6 +92,12 @@ const router = createRouter({
           path: '/admin/receptionists',
           name: 'receptionists-management',
           component: ReceptionistsManagement,
+        },
+
+        {
+          path: '/admin/appointments',
+          name: 'appointments-management',
+          component: AppointmentsManagement,
         },
 
         {
